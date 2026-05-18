@@ -29,13 +29,29 @@ The application includes:
 
 ## Streamlit Chat Interface
 
-![UI Screenshot](assets/ui.png)
+### Main Chat UI
+
+![Main UI](assets/ui.png)
 
 ---
 
-## FastAPI Swagger Documentation
+### Conversational Memory Example
 
-![Swagger Screenshot](assets/swagger.png)
+![Conversation Example](assets/ui_1.png)
+
+![Technical Answer](assets/ui_2.png)
+
+---
+
+# 📚 FastAPI Swagger Documentation
+
+![Swagger Docs](assets/swagger.png)
+
+---
+
+# 🧠 LangGraph Workflow Orchestration
+
+![Workflow Orchestration](assets/orchestration.png)
 
 ---
 
