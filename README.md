@@ -25,6 +25,20 @@ The application includes:
 
 ---
 
+# 🖥️ UI Preview
+
+## Streamlit Chat Interface
+
+![UI Screenshot](assets/ui.png)
+
+---
+
+## FastAPI Swagger Documentation
+
+![Swagger Screenshot](assets/swagger.png)
+
+---
+
 ## 🧠 Architecture
 
 ```
