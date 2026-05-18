@@ -1,0 +1,434 @@
+Pydantic Beginner to Intermediate Guide
+
+Introduction
+
+Pydantic is a Python library used for data validation and parsing.
+It uses Python type hints to validate data automatically.
+
+Pydantic is widely used with:
+- FastAPI
+- APIs
+- AI applications
+- Backend systems
+- Configuration management
+
+Installation
+
+pip install pydantic
+
+BaseModel
+
+The core component in Pydantic is BaseModel.
+
+from pydantic import BaseModel
+
+class User(BaseModel):
+    name: str
+    age: int
+
+Creating Objects
+
+user = User(name="Alice", age=25)
+
+Automatic Type Conversion
+
+user = User(name="Bob", age="30")
+
+Pydantic converts string to integer automatically.
+
+Validation Errors
+
+Invalid values raise validation errors.
+
+User(name="John", age="hello")
+
+Field Types
+
+Pydantic supports many field types.
+
+- str
+- int
+- float
+- bool
+- list
+- dict
+- datetime
+
+Example
+
+class Product(BaseModel):
+    name: str
+    price: float
+    in_stock: bool
+
+Optional Fields
+
+from typing import Optional
+
+class User(BaseModel):
+    email: Optional[str] = None
+
+Default Values
+
+class Settings(BaseModel):
+    debug: bool = False
+
+Lists
+
+from typing import List
+
+class Blog(BaseModel):
+    tags: List[str]
+
+Dictionaries
+
+from typing import Dict
+
+class Config(BaseModel):
+    metadata: Dict[str, str]
+
+Nested Models
+
+class Address(BaseModel):
+    city: str
+    country: str
+
+class Customer(BaseModel):
+    name: str
+    address: Address
+
+Nested Model Example
+
+customer = Customer(
+    name="Alice",
+    address={
+        "city": "Mumbai",
+        "country": "India"
+    }
+)
+
+Serialization
+
+Convert model to dictionary.
+
+user.model_dump()
+
+Convert model to JSON.
+
+user.model_dump_json()
+
+Parsing JSON
+
+json_data = '{"name":"Alice","age":22}'
+
+User.model_validate_json(json_data)
+
+Field Validation
+
+from pydantic import Field
+
+class Product(BaseModel):
+    price: float = Field(gt=0)
+
+Field Constraints
+
+gt means greater than.
+lt means less than.
+
+String Constraints
+
+class User(BaseModel):
+    username: str = Field(min_length=3)
+
+Number Constraints
+
+class Data(BaseModel):
+    age: int = Field(gt=18)
+
+Custom Validators
+
+from pydantic import field_validator
+
+class User(BaseModel):
+    age: int
+
+    @field_validator("age")
+    def validate_age(cls, value):
+        if value < 18:
+            raise ValueError("Must be adult")
+        return value
+
+Email Validation
+
+from pydantic import EmailStr
+
+class User(BaseModel):
+    email: EmailStr
+
+Install email-validator package.
+
+pip install email-validator
+
+Aliases
+
+from pydantic import Field
+
+class User(BaseModel):
+    full_name: str = Field(alias="fullName")
+
+Input Example
+
+{
+  "fullName": "John Doe"
+}
+
+Datetime Fields
+
+from datetime import datetime
+
+class Event(BaseModel):
+    created_at: datetime
+
+Enum Support
+
+from enum import Enum
+
+class Role(str, Enum):
+    admin = "admin"
+    user = "user"
+
+class Account(BaseModel):
+    role: Role
+
+Model Inheritance
+
+class BaseUser(BaseModel):
+    name: str
+
+class AdminUser(BaseUser):
+    permissions: list[str]
+
+ORM Mode
+
+class User(BaseModel):
+    id: int
+    name: str
+
+    model_config = {
+        "from_attributes": True
+    }
+
+Validation From Objects
+
+class UserObject:
+    def __init__(self):
+        self.id = 1
+        self.name = "Alice"
+
+User.model_validate(UserObject())
+
+Strict Types
+
+from pydantic import StrictInt
+
+class Data(BaseModel):
+    age: StrictInt
+
+Strict types prevent automatic conversion.
+
+Computed Fields
+
+class Rectangle(BaseModel):
+    width: int
+    height: int
+
+    @property
+    def area(self):
+        return self.width * self.height
+
+Frozen Models
+
+class Config:
+    frozen = True
+
+Schema Generation
+
+User.model_json_schema()
+
+JSON schema is useful for:
+- APIs
+- validation systems
+- documentation
+
+Extra Fields
+
+class User(BaseModel):
+    name: str
+
+Extra fields can:
+- be ignored
+- be accepted
+- raise validation errors
+
+Model Configuration
+
+class ConfigModel(BaseModel):
+    model_config = {
+        "extra": "forbid"
+    }
+
+Configuration Options
+
+- allow
+- ignore
+- forbid
+
+Environment Settings
+
+from pydantic_settings import BaseSettings
+
+class Settings(BaseSettings):
+    api_key: str
+
+Environment variables can load automatically.
+
+FastAPI Integration
+
+FastAPI heavily depends on Pydantic.
+
+from fastapi import FastAPI
+
+app = FastAPI()
+
+class User(BaseModel):
+    name: str
+    age: int
+
+@app.post("/users")
+def create_user(user: User):
+    return user
+
+Validation in FastAPI
+
+Pydantic validates:
+- Request body
+- Query parameters
+- Response models
+- Nested data
+
+Benefits of Pydantic
+
+- Automatic validation
+- Cleaner code
+- Type safety
+- Better API structure
+- Easier debugging
+
+AI and LLM Applications
+
+Pydantic is useful in AI systems.
+
+Use cases:
+- Structured outputs
+- Agent responses
+- Validation pipelines
+- RAG systems
+
+Generic Models
+
+from typing import Generic, TypeVar
+
+T = TypeVar("T")
+
+Generic models support reusable schemas.
+
+Union Types
+
+from typing import Union
+
+class Item(BaseModel):
+    value: Union[int, str]
+
+Literal Types
+
+from typing import Literal
+
+class User(BaseModel):
+    role: Literal["admin", "user"]
+
+Private Attributes
+
+from pydantic import PrivateAttr
+
+class User(BaseModel):
+    _token: str = PrivateAttr()
+
+Root Models
+
+from pydantic import RootModel
+
+class Numbers(RootModel):
+    root: list[int]
+
+Model Copy
+
+user.model_copy()
+
+Model Dump Include
+
+user.model_dump(include={"name"})
+
+Model Dump Exclude
+
+user.model_dump(exclude={"age"})
+
+Validation Assignment
+
+class User(BaseModel):
+    model_config = {
+        "validate_assignment": True
+    }
+
+Error Messages
+
+Pydantic provides detailed validation errors.
+
+Example
+
+[
+  {
+    "type": "int_parsing",
+    "loc": ["age"],
+    "msg": "Input should be integer"
+  }
+]
+
+Best Practices
+
+- Use clear schemas
+- Use type hints everywhere
+- Keep models modular
+- Validate important fields
+- Use nested models
+- Use constraints carefully
+
+Common Use Cases
+
+- FastAPI applications
+- AI systems
+- Configuration files
+- Backend APIs
+- Data pipelines
+
+Advantages of Pydantic
+
+- Fast validation
+- Clean syntax
+- Strong typing
+- Better reliability
+- Easy integration
+
+Conclusion
+
+Pydantic simplifies Python data validation using type hints.
+It improves code quality and works extremely well with FastAPI and AI applications.
